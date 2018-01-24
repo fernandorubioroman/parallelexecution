@@ -13,6 +13,5 @@ This script runs a list of commands or scripts stored in a csv and on all the in
 	Then, use infile help with 
 	get-help start-parallelexecution -full
 	
-	Special Thanks to: Alvaro Jimenez Contreras, Raul Carboneras & Jan-Hendrik Peters Jan-Hendrik Peters
-	
+	Special Thanks to: Alvaro Jimenez Contreras & Raul Carboneras
 	
