@@ -12,67 +12,67 @@ function Start-ParallelExecution
 
 .EXAMPLE
 -------------------------- EXAMPLE 1 --------------------------
-Start-ParallelExecution -machinestxtfile .\machines.txt -inputcommandscsvfile .\commands.csv -outputxmlfile .\output.xml -verbose
+Start-ParallelExecution -ComputerNameFile .\machines.txt -InputCommandFile .\commands.csv -OutputFile .\output.xml -verbose
 
 Description
 
 -----------
-This command get the list of machines specified on the machinestxtfile parameter, runs the commands specified in the inputcommandscsvfile parameter and stores the results in the outputxmlfile parameter, it uses -verbose to get execution information
+This command get the list of machines specified on the ComputerNameFile parameter, runs the commands specified in the InputCommandFile parameter and stores the results in the OutputFile parameter, it uses -verbose to get execution information
 
 -----------
 .EXAMPLE
 -------------------------- EXAMPLE 2 --------------------------
-Start-ParallelExecution -machinestxtfile .\machines.txt -credentialsfile .\creds.xml -inputcommandscsvfile .\commands.csv -outputxmlfile .\output.xml 
+Start-ParallelExecution -ComputerNameFile .\machines.txt -CredentialFile .\creds.xml -InputCommandFile .\commands.csv -OutputFile .\output.xml 
 
 Description
 
 -----------
-This command get the list of machines specified on the machinestxtfile parameter, runs the commands specified in the inputcommandscsvfile parameter,  using stored credentials from previous executions and stores the results in the outputxmlfile parameter
+This command get the list of machines specified on the ComputerNameFile parameter, runs the commands specified in the InputCommandFile parameter,  using stored credentials from previous executions and stores the results in the OutputFile parameter
 
 -----------
 .EXAMPLE
 -------------------------- EXAMPLE 3 --------------------------
-Start-ParallelExecution -machinestxtfile .\machines.txt -credentialsfile .\creds.xml -inputcommandscsvfile .\commands.csv -outputxmlfile .\output.xml -prerequisitesfolder .\prereq -scriptsfolder .\scripts
+Start-ParallelExecution -ComputerNameFile .\machines.txt -CredentialFile .\creds.xml -InputCommandFile .\commands.csv -OutputFile .\output.xml -prerequisitesfolder .\prereq -ScriptFolder .\scripts
 
 Description
 
 -----------
-This command get the list of machines specified on the machinestxtfile parameter, copy the contents of the folder specified on the prerequisitesfolder parameter to all of them, runs in paralel the commands and scripts specified in the inputcommandscsvfile parameter,  using stored credentials from previous executions and scripts stored in the folder specified on the scriptsfolder parameter and stores the results in the outputxmlfile parameter
+This command get the list of machines specified on the ComputerNameFile parameter, copy the contents of the folder specified on the prerequisitesfolder parameter to all of them, runs in paralel the commands and scripts specified in the InputCommandFile parameter,  using stored credentials from previous executions and scripts stored in the folder specified on the ScriptFolder parameter and stores the results in the OutputFile parameter
 
 -----------
 .EXAMPLE
 -------------------------- EXAMPLE 4 --------------------------
-Start-ParallelExecution -machineslist machine1.contoso.com,machine2.contoso.com -credentialsfile .\creds.xml -inputcommandscsvfile .\commands.csv -outputxmlfile .\output.xml -prerequisitesfolder .\prereq -scriptsfolder .\scripts
+Start-ParallelExecution -ComputerName machine1.contoso.com,machine2.contoso.com -CredentialFile .\creds.xml -InputCommandFile .\commands.csv -OutputFile .\output.xml -prerequisitesfolder .\prereq -ScriptFolder .\scripts
 
 Description
 
 -----------
-This command  get the list of machines specified on the machineslist parameter copy the contents of the folder specified on the prerequisitesfolder parameter, runs the commands and scripts specified in the inputcommandscsvfile parameter,  using stored credentials from previous executions and scripts stored in the folder specified on the scriptsfolder parameter and stores the results in the outputxmlfile parameter
+This command  get the list of machines specified on the ComputerName parameter copy the contents of the folder specified on the prerequisitesfolder parameter, runs the commands and scripts specified in the InputCommandFile parameter,  using stored credentials from previous executions and scripts stored in the folder specified on the ScriptFolder parameter and stores the results in the OutputFile parameter
 
 -----------
 .EXAMPLE
 -------------------------- EXAMPLE 5 --------------------------
-Get-ADDomainController -filter * | select -expandproperty hostname |  Start-ParallelExecution  -credentialsfile .\creds.xml -inputcommandscsvfile .\commands.csv -outputxmlfile .\output.xml -scriptsfolder .\scripts
+Get-ADDomainController -filter * | select -expandproperty hostname |  Start-ParallelExecution  -CredentialFile .\creds.xml -InputCommandFile .\commands.csv -OutputFile .\output.xml -ScriptFolder .\scripts
 
 Description
 
 -----------
-This command  get the list of machines passed through the pipeline (in the example we get the list of all domain controllers in a domain and use that as input), runs the commands and scripts specified in the inputcommandscsvfile parameter,  using stored credentials from previous executions and scripts stored in the folder specified on the scriptsfolder parameter and stores the results in the outputxmlfile parameter
+This command  get the list of machines passed through the pipeline (in the example we get the list of all domain controllers in a domain and use that as input), runs the commands and scripts specified in the InputCommandFile parameter,  using stored credentials from previous executions and scripts stored in the folder specified on the ScriptFolder parameter and stores the results in the OutputFile parameter
 
 -----------
 .EXAMPLE
 -------------------------- EXAMPLE 6 --------------------------
-$results = Start-ParallelExecution  -credentialsfile .\creds.xml -machineslist machine1.contoso.com,machine2.contoso.com -inputcommandscsvfile .\commands.csv -scriptsfolder .\scripts 
+$results = Start-ParallelExecution  -CredentialFile .\creds.xml -ComputerName machine1.contoso.com,machine2.contoso.com -InputCommandFile .\commands.csv -ScriptFolder .\scripts 
 
 Description
 
 -----------
-This command gets a list of machines from the machinelist parameter, runs the commands and scripts specified in the inputcommandscsvfile parameter,  using stored credentials from previous executions and scripts stored in the folder specified on the scriptsfolder parameter and stores the results in the $results variable.
+This command gets a list of machines from the machinelist parameter, runs the commands and scripts specified in the InputCommandFile parameter,  using stored credentials from previous executions and scripts stored in the folder specified on the ScriptFolder parameter and stores the results in the $results variable.
 
 -----------
 
 
- .PARAMETER inputcommandscsvfile
+ .PARAMETER InputCommandFile
 This is the input file (# separated) with  the commands or scripts to run on each machine, the format is as follows
  -------------------------- EXAMPLE CSV FILE --------------------------
 propertyname#command#Script#Description
@@ -81,28 +81,28 @@ testcommand #get-help#false#this executes get-help in the destination machines
 testscript#.\testscript.ps1#true#this executes testsript.ps1 in the destination machines
 -----------
 
-.PARAMETER outputxmlfile
+.PARAMETER OutputFile
 this optional parameter is the output file in xml format with the results of the commands ran against all machines, it contains a hashtable of objects with one entry per machine, each entry contains one property per command/script executed with the result of the execution of that command
 
-.PARAMETER timeoutvalue
+.PARAMETER TimeoutInSeconds
 This parameter contains the timeout used for jobs (to finish jobs that are hung)
 
-.PARAMETER machinestxtfile
+.PARAMETER ComputerNameFile
 This parameter contains the file with the list of fqdn of machines to run against
 
 .PARAMETER machineslist
 This parameter contains the comma separated list of fqdn of machines to work against, can accept input from pipeline
 
-.PARAMETER credentialsfile
+.PARAMETER CredentialFile
 This optional parameter contains a xml file with the saved credentials per domain, if specified and the file does not exist it will ask for credentials and create the creds file for later use, if not specified it will use local logged on user credentials
 
 .PARAMETER prerequisitesfolder
 This optional parameter contains the path to a folder to be copied to the same destination to all computers (to include modules and other prerequisites)
 
-.PARAMETER scriptsfolder
-This optional parameter contains the path to a folder that contains all scripts that will be called from the inputcommandscsvfile file)
+.PARAMETER ScriptFolder
+This optional parameter contains the path to a folder that contains all scripts that will be called from the InputCommandFile file)
 
-.PARAMETER singlecommand
+.PARAMETER Command
 This optional parameter contains a single command to be executed in paralel against all machines instead of using a csv file
 
 .PARAMETER Throttlecopy
