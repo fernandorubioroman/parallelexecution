@@ -12,7 +12,7 @@
     RootModule = 'ParallelExecution.psm1'
     
     # Version number of this module.
-    ModuleVersion = '0.2'
+    ModuleVersion = '0.3'
     
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -21,19 +21,16 @@
     GUID = '28fd0327-e13e-463b-8a0e-55c1db5e99e6'
     
     # Author of this module
-    Author = 'Fernando Rubio Roman'
+    Author = 'Fernando Rubio Roman, Alvaro Jimenez Contreras' 
     
     # Company or vendor of this module
     CompanyName = 'Unknown'
-    
-    # Copyright statement for this module
-    Copyright = '(c) 2018 Fernando Rubio Roman. All rights reserved.'
     
     # Description of the functionality provided by this module
     Description = 'A module to leverage jobs for parallel script execution'
     
     # Minimum version of the Windows PowerShell engine required by this module
-    PowerShellVersion = '4.0'
+    PowerShellVersion = '3.0'
     
     # Name of the Windows PowerShell host required by this module
     # PowerShellHostName = ''
