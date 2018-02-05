@@ -6,18 +6,15 @@ function Get-MachineObject
     )
 
     $machinesarray = New-Object System.Collections.ArrayList # ArrayList is faster
+    #Refactored for speed (using collection initializer and removing variables, thanks to Steve Renard)
     $MachineList | Sort-Object -Unique | ForEach-Object -Process `
     {
-        $shortname = ($_ -split "\.", 2)[0]
-        $DomainName = ($_ -split "\.", 2)[1]
-        $machine = $_
-    
-        $machineobj = New-Object psobject
-        $machineobj | Add-Member -MemberType NoteProperty -Name shortname  -Value $shortname  -Force
-        $machineobj | Add-Member -MemberType NoteProperty -Name Domain  -Value $DomainName -Force 
-        $machineobj | Add-Member -MemberType NoteProperty -Name hostname  -Value $machine -Force
+        $machineobj = [PSCustomObject]@{
+            shortname  = ($_ -split "\.", 2)[0]
+            Domain =  ($_ -split "\.", 2)[1]
+            hostname    = $_
+        }
         [void] ($machinesArray.Add($machineobj))
     }
-
     return $machinesarray 
 }
