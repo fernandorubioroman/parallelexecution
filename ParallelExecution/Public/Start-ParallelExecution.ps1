@@ -462,7 +462,9 @@ This optional parameter allows the usage of a custom JEA session by using the co
                     elseif ($job.State -eq "Failed")
                     {
                         $location = $job.location
-                        $generalhashtable.$Location| Add-Member -MemberType NoteProperty -Name $commandInfo.propertyname  -Value  "JOBFAILED" -force
+                        $errormessage=$null
+                        $errormessage=($job | Receive-Job 2>&1)
+                        $generalhashtable.$Location| Add-Member -MemberType NoteProperty -Name $commandInfo.propertyname  -Value  $errormessage -force
                         write-verbose  "The command failed to execute in $($job.Location)" 
                         remove-Job $Job
                     }
