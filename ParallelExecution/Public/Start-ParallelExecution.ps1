@@ -159,7 +159,9 @@ This optional parameter defines the number of simultaneous copy operations if a 
         $Command,
 
         [string]
-        $Throttlecopy = "5"
+        $Throttlecopy = "5",
+        [string]
+        $ConfigurationName 
     )
     #We use an advanced function so if machines are passed through the pipeline, an array is created and then executed in paralel against all of them
     BEGIN
@@ -270,8 +272,32 @@ This optional parameter defines the number of simultaneous copy operations if a 
         Get-PSSession | Where-Object Name -like 'ParallelExecution*' | Remove-PSSession
         Get-Job -Name Parallel*| stop-job 
         get-job -Name Parallel* |Remove-Job
+#We iterate over the domains opening sessions in paralel for each domain (we can not further parelalize because of credentials#> Modified to support JEA so that we can specfy a custom ConfigurationName session name
+        
+    if ($PSBoundParameters.ContainsKey('ConfigurationName'))
+    {
+        if ($PSBoundParameters.ContainsKey('CredentialFile'))
+        {
+            foreach ($domain in $domains)
+            {
+                $machinesinthisdomain = $machines| Where-Object {$_.domain -eq $domain}  
+                [array]$countinthisdomain = $machinesinthisdomain
+                write-verbose "opening sessions against  $($countinthisdomain.Count) machine(s) in domain  $domain"
+                $machinesinthisdomain.hostname | ForEach-Object {New-PSSession -ComputerName $_ -Name "ParallelExecutionTo-$_" -Credential $Domcreds[$Domain] -ConfigurationName $ConfigurationName -ThrottleLimit 25} | Out-Null
+            }
+        }
+        #if we use current logged on user credentials we can crete sessions in one step for all machines
+        else
+        {
+        
+            write-verbose "opening sessions against  $($machines.Count) machine(s)"
+            $machines.Hostname | ForEach-Object {New-PSSession -ComputerName $_ -Name "ParallelExecutionTo-$_" -ConfigurationName $ConfigurationName -ThrottleLimit 25} | Out-Null
+        
+        }
+    }
+    else
+    {
 
-        #We iterate over the domains opening sessions in paralel for each domain (we can not further parelalize because of credentials#>
         if ($PSBoundParameters.ContainsKey('CredentialFile'))
         {
             foreach ($domain in $domains)
@@ -290,6 +316,10 @@ This optional parameter defines the number of simultaneous copy operations if a 
             $machines.Hostname | ForEach-Object {New-PSSession -ComputerName $_ -Name "ParallelExecutionTo-$_"  -ThrottleLimit 25} | Out-Null
         
         }
+
+    }
+
+
         #Generates the hashtable using the hostname as key and adding the hostname, Domain, and opened session as properties.
         foreach ($machine in $Machines)
         {
