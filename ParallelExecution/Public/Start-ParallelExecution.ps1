@@ -107,6 +107,10 @@ This optional parameter contains a single command to be executed in paralel agai
 
 .PARAMETER Throttlecopy
 This optional parameter defines the number of simultaneous copy operations if a prerequisites folder is specified
+
+.PARAMETER ConfigurationName
+This optional parameter allows the usage of a custom JEA session by using the configurationname switch while creating the remote sessions
+
 #>
     [CmdletBinding(DefaultParameterSetName = 'PipelineSingle')]          
     Param(
