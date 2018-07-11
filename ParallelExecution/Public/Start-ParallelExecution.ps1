@@ -368,7 +368,7 @@ This optional parameter allows the usage of a custom JEA session by using the co
                 {
                     Start-Job -Name "ParallelExecution$_" -ScriptBlock {
                         param ($cpn, $sourcepath, $PrerequisitesFolder, $Domcreds, $Domain)
-                        $short = $cpn.split(".")[0] + (random(1..100))
+                        $short = $cpn.split(".")[0] + (Get-Random(1..100))
                         New-PSDrive -Name $short -PSProvider filesystem -Root "\\$cpn\c$" -Credential $Domcreds[$Domain]
                         $destinationpath = $short + ":" + $sourcepath.PSParentPath.split("::")[3]
                         #for this to work no other SMB connection (even an explorer one) has to be opened to the destination machine, TODO:Remove machines we can not copy prereqs to
@@ -380,7 +380,7 @@ This optional parameter allows the usage of a custom JEA session by using the co
                 {
                     Start-Job -Name "ParallelExecution$_" -ScriptBlock {
                         param ($cpn, $sourcepath, $PrerequisitesFolder, $Domcreds, $Domain)
-                        $short = $cpn.split(".")[0] + (random(1..100))
+                        $short = $cpn.split(".")[0] + (Get-Random(1..100))
                         New-PSDrive -Name $short -PSProvider filesystem -Root "\\$cpn\c$" 
                         $destinationpath = $short + ":" + $sourcepath.PSParentPath.split("::")[3]
                         #for this to work no other SMB connection (even an explorer one) has to be opened to the destination machine, TODO:Remove machines we can not copy prereqs to
