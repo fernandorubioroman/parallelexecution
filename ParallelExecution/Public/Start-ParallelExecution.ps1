@@ -124,6 +124,11 @@ This optional parameter allows the usage of a custom JEA session by using the co
             HelpMessage = "Enter the list of machines's fqdn.",
             ValueFromPipelineByPropertyName = $True,        
             ParameterSetName = 'PipelineMulti')]
+        [parameter(Mandatory = $True,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter the list of machines's fqdn.",
+            ValueFromPipelineByPropertyName = $True,        
+            ParameterSetName = 'Pipelinescript')]
         [string[]]
         $ComputerName,
 
@@ -133,6 +138,9 @@ This optional parameter allows the usage of a custom JEA session by using the co
         [Parameter(Mandatory = $true,
             HelpMessage = "Enter txt file with the lists of machines's fqdn.",
             ParameterSetName = 'ListMulti')]
+        [Parameter(Mandatory = $true,
+            HelpMessage = "Enter txt file with the lists of machines's fqdn.",
+            ParameterSetName = 'Listscript')]
         [string]
         $ComputerNameFile,
 
@@ -141,7 +149,16 @@ This optional parameter allows the usage of a custom JEA session by using the co
         [string]
         $InputCommandFile,
 
-        [parameter(HelpMessage = "Enter the path of an xml to output de results.")]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ListSingle')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'PipelineSingle')]
+        [string]
+        $Command,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Listscript')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Pipelinescript')]
+        [string]
+        $script,
+
         [string]
         $OutputFile,
         
@@ -149,21 +166,17 @@ This optional parameter allows the usage of a custom JEA session by using the co
         $CredentialFile,
 
         [int]
-        $TimeoutInSeconds = "600",
+        $TimeoutInSeconds = "900",
         
         [string]        
         $PrerequisitesFolder = ".\prereq\",
 
         [string]
         $ScriptFolder = ".\scripts\",
-
-        [Parameter(Mandatory = $true, ParameterSetName = 'ListSingle')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'PipelineSingle')]
-        [string]
-        $Command,
-
+        
         [string]
         $Throttlecopy = "5",
+
         [string]
         $ConfigurationName 
     )
@@ -255,7 +268,15 @@ This optional parameter allows the usage of a custom JEA session by using the co
                 Script       = $false
             }
         }        
-
+         if ($PSCmdlet.ParameterSetName -like '*script')
+        {
+            $commands = @()
+            $commands += New-Object -TypeName psobject -Property @{
+                propertyname = 'results'
+                command      = $script
+                Script       = $true
+            }
+        }    
         #generates machines objects from the list, creates the domain list and get a valid credential per each one of the domains if cred file is  specified and not exist
         $machines = Get-MachineObject $ComputerName
         $domains = $machines | Select-Object -ExpandProperty Domain | Sort-Object -Unique
